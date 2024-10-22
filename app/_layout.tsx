@@ -1,37 +1,30 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { router } from "expo-router";
+import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+// custom
+import { Drawer } from "@/layouts/drawer";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItem label="Home" onPress={() => router.push("(tabs)")} />
+      <DrawerItem label="Fresh" onPress={() => router.push("(tabs)/fresh")} />
+      <DrawerItem
+        label="Trending"
+        onPress={() => router.push("(tabs)/trending")}
+      />
+    </DrawerContentScrollView>
+  );
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Drawer
+      screenOptions={{
+        title: "Lahelu",
+        drawerType: "front",
+        headerTitleStyle: { textTransform: "uppercase" },
+      }}
+      drawerContent={CustomDrawerContent}
+    />
   );
 }
